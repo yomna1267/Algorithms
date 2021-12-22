@@ -1,11 +1,11 @@
 package com.queue;
 
-public class queueArray {
+public class circularQueueArray {
     public int[] array;
     private int front = 0;
     private int rear = -1;
     private int size = 0;
-    queueArray(int sz){
+    circularQueueArray(int sz){
 
         array = new int[sz];
     }
@@ -27,16 +27,21 @@ public class queueArray {
             rear++;
         }
     }
-    public int pop(){
+    public void pop(){
         if(isEmpty()){
-            System.out.println("Queue is empty");
-            return (Integer.MAX_VALUE);
+           return;
         }
         else{
             size--;
-            int element = array[front];
             front = (front+1)%array.length;
-            return(element);
+        }
+    }
+    public int peek(){
+        if(isEmpty()){
+            return (Integer.MIN_VALUE);
+        }
+        else{
+            return(array[front]);
         }
     }
     public int size(){
