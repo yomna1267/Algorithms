@@ -13,7 +13,9 @@ public class doublyLinkedList {
     public void insertFirst(int x){
         Node newNode = new Node(x);
         if(tail == null){
-            tail = newNode;
+            tail = head = newNode;
+            size++;
+            return;
         }
         newNode.next = head;
         if(size >= 1) {
