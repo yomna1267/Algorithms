@@ -1,14 +1,14 @@
 package com.LinkedList;
 
-public class linkedList {
+public class doublyLinkedList {
     private class Node{
         int data;
-        Node next;
+        Node next, previous;
         Node(int x){
             data = x;
         }
     }
-    Node head,  tail;
+    Node head, tail;
     public int size = 0;
     public void insertFirst(int x){
         Node newNode = new Node(x);
@@ -16,20 +16,20 @@ public class linkedList {
             tail = newNode;
         }
         newNode.next = head;
+        if(size >= 1) {
+            head.previous = newNode;
+        }
         head = newNode;
         size++;
     }
     public void insertLast(int x){
-        if(head == null){
-           insertFirst(x);
-           return;
-        }
         Node newNode = new Node(x);
-        Node current = head;
-        while (current.next != null){
-            current = current.next;
+        if(head == null){
+            insertFirst(x);
+            return;
         }
-        current.next = newNode;
+        tail.next = newNode;
+        newNode.previous = tail;
         tail = newNode;
         size++;
     }
@@ -49,9 +49,11 @@ public class linkedList {
         Node newNode = new Node(x);
         Node current = head;
         for(int i = 0; i < pos-1; ++i){
-            current= current.next;
+            current = current.next;
         }
+        current.next.previous = newNode;
         newNode.next = current.next;
+        newNode.previous = current;
         current.next = newNode;
         size++;
     }
@@ -59,11 +61,12 @@ public class linkedList {
         if(head == null){
             return;
         }
-        else if(head == tail){
+        if(head == tail){
             head = tail = null;
             size--;
             return;
         }
+        head.next.previous = null;
         head = head.next;
         size--;
     }
@@ -71,22 +74,13 @@ public class linkedList {
         if(tail == null){
             return;
         }
-        else if(head == tail){
+        if(head == tail){
             head = tail = null;
             size--;
             return;
         }
-        else if (head.next == null){
-            head = null;
-            size--;
-            return;
-        }
-        Node current = head;
-        while (current.next.next != null){
-            current = current.next;
-        }
-        current.next = null;
-        tail = current;
+        tail = tail.previous;
+        tail.next = null;
         size--;
     }
     public void deletePosition(int pos){
@@ -98,15 +92,16 @@ public class linkedList {
             deleteFirst();
             return;
         }
-        if(pos == size){
+        if(pos == size-1){
             deleteLast();
             return;
         }
         Node current = head;
-        for(int i = 0; i < pos-1; ++i){
+        for(int i = 0; i < pos; ++i){
             current = current.next;
         }
-        current.next = current.next.next;
+        current.next.previous = current.previous;
+        current.previous.next = current.next;
         size--;
     }
     public boolean find(int x){
@@ -138,7 +133,7 @@ public class linkedList {
         return Integer.MIN_VALUE;
     }
     public void display(){
-        Node current =  head;
+       Node current =  head;
         while (current != null){
             System.out.print(current.data + " ");
             current = current.next;
